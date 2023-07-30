@@ -1,31 +1,51 @@
 import React, { useState } from 'react';
-import './index.css';
 
-function TaskForm({ addTask }) {
+function TaskForm({ onAddTask, groups, selectedGroup, setSelectedGroup }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleAddTask = (e) => {
     e.preventDefault();
-    if (title && description) {
-      addTask(title, description);
-      setTitle('');
-      setDescription('');
-    }
+    if (!title.trim() || !description.trim()) return;
+
+    const newTask = {
+      id: Date.now(),
+      title,
+      description,
+      completed: false,
+      groupId: selectedGroup.id,
+    };
+
+    onAddTask(newTask);
+    setTitle('');
+    setDescription('');
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Task Title:
-        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
-      </label>
-      <label>
-        Task Description:
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
-      </label>
-      <button type="submit">Add Task</button>
-    </form>
+    <div className="task-form">
+      <form onSubmit={handleAddTask}>
+        <input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <textarea
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <button type="submit">Add Task</button>
+      </form>
+      <div className="group-selector">
+        <span>Select Group:</span>
+        <select value={selectedGroup.id} onChange={(e) => setSelectedGroup(groups.find(group => group.id === parseInt(e.target.value)))}>
+          {groups.map(group => (
+            <option key={group.id} value={group.id}>{group.name}</option>
+          ))}
+        </select>
+      </div>
+    </div>
   );
 }
 

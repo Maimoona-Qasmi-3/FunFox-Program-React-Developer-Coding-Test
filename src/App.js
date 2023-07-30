@@ -3,37 +3,41 @@ import TaskForm from './TaskForm';
 import TaskList from './TaskList';
 import './index.css';
 
+const initialGroups = [
+  { id: 1, name: 'Group 1' },
+  { id: 2, name: 'Group 2' },
+  // Add more groups if needed
+];
+
 function App() {
-  const [tasks, setTasks] = useState([
-    { id: 1, title: 'Task 1', description: 'Description for Task 1', completed: false },
-    { id: 2, title: 'Task 2', description: 'Description for Task 2', completed: false },
-  ]);
+  const [tasks, setTasks] = useState([]);
+  const [groups] = useState(initialGroups);
+  const [selectedGroup, setSelectedGroup] = useState(groups[0]);
 
-  const addTask = (title, description) => {
-    const newTask = {
-      id: tasks.length + 1,
-      title,
-      description,
-      completed: false,
-    };
-    setTasks([...tasks, newTask]);
+  const handleAddTask = (newTask) => {
+    setTasks((prevTasks) => [...prevTasks, { ...newTask, groupId: selectedGroup.id }]);
   };
 
-  const toggleTaskCompletion = (taskId) => {
-    setTasks(tasks.map((task) =>
-      task.id === taskId ? { ...task, completed: !task.completed } : task
-    ));
+  const handleToggleTaskCompletion = (taskId) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task
+      )
+    );
   };
 
-  const deleteTask = (taskId) => {
-    setTasks(tasks.filter((task) => task.id !== taskId));
+  const handleDeleteTask = (taskId) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
+
+  // Filter tasks based on the selected group
+  const filteredTasks = tasks.filter((task) => task.groupId === selectedGroup.id);
 
   return (
     <div className="container">
       <h1>Task Management System</h1>
-      <TaskForm addTask={addTask} />
-      <TaskList tasks={tasks} setTasks={setTasks} toggleTaskCompletion={toggleTaskCompletion} deleteTask={deleteTask} />
+      <TaskForm onAddTask={handleAddTask} groups={groups} selectedGroup={selectedGroup} setSelectedGroup={setSelectedGroup} />
+      <TaskList tasks={filteredTasks} toggleTaskCompletion={handleToggleTaskCompletion} deleteTask={handleDeleteTask} />
     </div>
   );
 }
