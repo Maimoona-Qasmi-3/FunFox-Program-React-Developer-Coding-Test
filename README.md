@@ -40,6 +40,11 @@ Access the application in your web browser at http://localhost:3000. Create task
 - Mark tasks as complete or incomplete for easy tracking.
 - Effortlessly delete tasks from the list.
 - Smooth and responsive design, optimized for various devices.
+- **Task 4: API Integration and Data Sharing**
+  - Integrate the task management system with a mock API that supports data sharing between users in the same group.
+  - Each user should be part of a specific group, and upon login, they should only see tasks from other users within the same group.
+  - Allow users to add tasks that will be visible to others in the same group.
+  - Ensure that the state management allows for real-time updates when a user adds, completes, or deletes a task.
 
 ## Technologies
 - React.js
